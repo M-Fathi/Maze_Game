@@ -26,10 +26,11 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class Main2Activity extends AppCompatActivity implements SensorEventListener {
 
     private int radius = 30, radius_ball = 25, top, bottom, right, left;
-    private float sensorX, sensorZ, sensorY, cx, cy, cy_goal, cx_goal, cx_black, cy_black, cy_black_df = 0,new_Cx_black, new_Cy_black;
+    private float sensorX, sensorZ, sensorY, cx, cy, cy_goal, cx_goal,     cy_black_df = 0;
     MyView myView;
 
 
@@ -45,14 +46,15 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
     Timer timer;
     Handler handler = new Handler();
 
-    LinkedHashMap<Float, Float> map,map2;
+    //LinkedHashMap<Float, Float> map;
+    List<GameCircle> aList =new ArrayList<GameCircle>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        map = new LinkedHashMap<>();
-        map2 = new LinkedHashMap<>();
+        //map = new LinkedHashMap<>();
+        //map2 = new LinkedHashMap<>();
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 //------------------------------------------------
@@ -109,7 +111,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                         @Override
                         public void run() {
                             pointInGoal(cx, cy, cx_goal, cy_goal, radius);
-                            pointInHole(cx, cy, map, radius);
+                            pointInHole(cx, cy,  radius);
                             myView.invalidate();
                         }
                     });
@@ -130,17 +132,20 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             radius_ball = 0;
             myView.invalidate();
             Toast.makeText(this, "You Won", Toast.LENGTH_LONG).show();
+            timer.cancel();
+            timer.purge();
+            return;
         } else {
         }
     }
 
 
-    public void pointInHole(float x_test, float y_test, Map<Float, Float> map_hole, double radius) {
+    public void pointInHole(float x_test, float y_test,  double radius) {
 
 
-        for (Map.Entry<Float, Float> entry : map_hole.entrySet()) {
-            float x_center = entry.getKey();
-            float y_center = entry.getValue();
+        for (GameCircle entry : aList) {
+            float x_center = entry.XCordinate;
+            float y_center = entry.YCordinate;
 
             double dx = x_test - x_center;
             double dy = y_test - y_center;
@@ -151,7 +156,10 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 cx = width / 2;
                 myView.invalidate();
                 Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show();
-                break;
+                timer.cancel();
+                timer.purge();
+                return;
+                //break;
             } else {
             }
         }
@@ -266,13 +274,14 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
             //-------------------------------------------------------
             //map=ShuffleIt(map);
-            for (Map.Entry<Float, Float> entry : map.entrySet()) {
+            for (GameCircle entry : aList) {
                 pen.setColor(Color.BLACK);
-                new_Cy_black=entry.getValue()-cy_black_df;
-                new_Cx_black=entry.getKey();
-                canvas.drawCircle(new_Cx_black, new_Cy_black, radius, pen);
+                 entry.YCordinate=entry.YCordinate-cy_black_df;
+
+                canvas.drawCircle(entry.XCordinate, entry.YCordinate, radius, pen);
                 //map.remove(entry.getKey());
-                map.put(new_Cx_black,new_Cy_black);
+
+                //(new GameCircle(i,cx_black,cy_black));
             }
         }
     }
@@ -290,24 +299,18 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
         for (int i = 1; i < 20; i++) {
             random_num = (float) Math.random();
-            cy_black = random_num * (maxStart_Y - minStart_Y) + minStart_Y;
-            cx_black = random_num * (maxStart_X - minStart_X) + minStart_X;
-            map.put(cx_black, cy_black);
+            float  cy_black = random_num * (maxStart_Y - minStart_Y) + minStart_Y;
+            float  cx_black = random_num * (maxStart_X - minStart_X) + minStart_X;
+            //map.put(cx_black, cy_black);
+            aList.add(new GameCircle(i,cx_black,cy_black));
 
         }
-        map2=ShuffleIt(map);
+         //ShuffleList();
+        Collections.shuffle( aList);
 
     }
 
-    private LinkedHashMap<Float, Float> ShuffleIt(HashMap<Float, Float> map) {
-        LinkedHashMap mapNew = new LinkedHashMap<>();
 
-        List keys = new ArrayList(map.keySet());
-        Collections.shuffle(keys);
-        for (Object o : keys)     // Access keys/values in a random order
-            mapNew.put(o, map.get(o));
-        return mapNew;
-    }
 
 
 }
