@@ -1,11 +1,18 @@
 package com.mohammad_fathi.maze_game;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,29 +30,28 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main2Activity extends AppCompatActivity implements SensorEventListener {
 
-    private int radius = 30, radius_ball = 25, top, bottom, right, left;
-    private float sensorX, sensorZ, sensorY, cx, cy, cy_goal, cx_goal, cx_black, cy_black, cy_black_df = 0,new_Cx_black, new_Cy_black;
+    private int radius = 30, radius_ball , top, bottom, right, left, score=0;
+    private float sensorX, sensorZ, sensorY, cx, cy, cy_goal, cx_goal, cx_black, cy_black, cy_black_df = 0, new_Cx_black, new_Cy_black;
+    String str_score = "0000";
     MyView myView;
 
-
     long lastSensorUpdateTime;
-
     int height, width, heightPixels, widthPixels;
 
 
     SensorManager sensorManager;
     Sensor sensor;
 
-
     Timer timer;
     Handler handler = new Handler();
 
-    LinkedHashMap<Float, Float> map,map2;
+    LinkedHashMap<Float, Float> map, map2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +61,19 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         map2 = new LinkedHashMap<>();
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-//------------------------------------------------
+//------------------- Screen Dimension-----------------------------
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         height = displayMetrics.heightPixels;
         width = displayMetrics.widthPixels;
-//------------------------------------------------
+//-----------------------------------------------------------------
 
         cy = height / 50;
         cx = width / 2;
 
         cy_goal = height - (height / 5);
         cx_goal = width / 2;
+
 
         myView = new MyView(this);
         setContentView(myView);
@@ -76,7 +83,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         right = width - radius;
         left = radius;
 
-        Hole_producer();
+        Hole_producer_2();
 
         try {
 
@@ -105,6 +112,8 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                     }
 
                     cy_black_df += 0.0025;
+                    score+=1;
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -129,11 +138,14 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         if (d < radius) {
             radius_ball = 0;
             myView.invalidate();
-            Toast.makeText(this, "You Won", Toast.LENGTH_LONG).show();
+
+            String title = "You Won";
+            String message = "Do you want to play again?";
+            dialog(myView, title, message);
+            //Toast.makeText(this, "You Won", Toast.LENGTH_LONG).show();
         } else {
         }
     }
-
 
     public void pointInHole(float x_test, float y_test, Map<Float, Float> map_hole, double radius) {
 
@@ -150,13 +162,16 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 cy = height / 50;
                 cx = width / 2;
                 myView.invalidate();
-                Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show();
+                timer.cancel();
+                String title = "Game Over";
+                String message = "Do you want to play again?";
+                dialog(myView, title, message);
+
                 break;
             } else {
             }
         }
     }
-
 
     @Override
     protected void onStart() {
@@ -219,25 +234,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             pen.setStyle(Paint.Style.FILL);
             pen.setColor(back_color);
             canvas.drawPaint(pen);
-            //pen.setTextSize(30f);
 
-            pen.setColor(Color.BLUE);
-            canvas.drawCircle(cx, cy, radius_ball, pen);
 
             //------------------------------------------------
-            pen.setColor(getResources().getColor(R.color.gold));
-            canvas.drawCircle(cx_goal, cy_goal, radius, pen);
-            //------------------------------------------------
-
-            /*float minStart_Y = heightPixels/2;
-            float maxStart_Y = 3*heightPixels;
-
-            float minStart_X = 0;
-            float maxStart_X = widthPixels;
-
-            float random_num = (float) Math.random();
-            float cy_rand = random_num * (maxStart_Y - minStart_Y) + minStart_Y;
-            float cx_rand = random_num * (maxStart_X - minStart_X) + minStart_X;*/
 
             //---------------------------------------------------
             // تولید اتوماتیک و دایمی نقاط مشکی
@@ -251,8 +250,6 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
             }*/
             // map_clone.putAll(map);
-
-
             //------------------------------------------------------
             // برای زمانیه که مکان دایره های مشکی ثابت بود
 
@@ -263,40 +260,94 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 canvas.drawCircle(cx_black, cy_black, radius, pen);
                 map.put(cx_black, cy_black);
             }*/
-
-            //-------------------------------------------------------
-            //map=ShuffleIt(map);
+            //------------------ Block Point -----------------------------------
             for (Map.Entry<Float, Float> entry : map.entrySet()) {
-                pen.setColor(Color.BLACK);
-                new_Cy_black=entry.getValue()-cy_black_df;
-                new_Cx_black=entry.getKey();
-                canvas.drawCircle(new_Cx_black, new_Cy_black, radius, pen);
+                pen.setColor(back_color);
+                new_Cy_black = entry.getValue() - cy_black_df;
+                new_Cx_black = entry.getKey();
+
+                //------------ کد برای کشیدن دایره Hole---------------------
+                //canvas.drawCircle(new_Cx_black, new_Cy_black, radius, pen);
                 //map.remove(entry.getKey());
-                map.put(new_Cx_black,new_Cy_black);
+                //-----------------------------------------------------------
+
+                int left = (int) (new_Cx_black - radius);
+                int right = (int) (new_Cx_black + radius);
+                int top = (int) (new_Cy_black - radius);
+                int bottom = (int) (new_Cy_black + radius);
+                Rect rect = new Rect(left, top, right, bottom);
+                canvas.drawRect(rect, pen);
+                Drawable drawable = getResources().getDrawable(R.drawable.d4);
+                drawable.setBounds(rect);
+                drawable.draw(canvas);
+
+                map.put(new_Cx_black, new_Cy_black);
+
             }
+            //---------------- Score Board --------------------------------
+            pen.setColor(Color.BLUE);
+            pen.setTextSize(30f);
+            pen.setTypeface(Typeface.DEFAULT_BOLD);
+            str_score= String.valueOf(score);
+            String str_sc="Score : ";
+            canvas.drawText(str_sc, (float) (widthPixels - 200), (float) (35), pen);
+            canvas.drawText(str_score, (float) (widthPixels - 100), (float) (35), pen);
+
+            //----------------Goal Point----------------------------------
+            pen.setColor(getResources().getColor(R.color.gold));
+            canvas.drawCircle(cx_goal, cy_goal, radius, pen);
+            //---------------- Ball --------------------------------------
+            pen.setColor(Color.BLUE);
+            canvas.drawCircle(cx, cy, radius_ball, pen);
+
         }
     }
 
     public void Hole_producer() {
 
-        float minStart_Y = heightPixels/2;
-        float maxStart_Y = 4*heightPixels;
+        float minStart_Y = heightPixels / 2;
+        float maxStart_Y = 4 * heightPixels;
 
         float minStart_X = 0;
         float maxStart_X = widthPixels;
 
-        float random_num;
+        radius_ball= (int) (widthPixels*0.02);
 
+        float random_num;
 
         for (int i = 1; i < 20; i++) {
             random_num = (float) Math.random();
             cy_black = random_num * (maxStart_Y - minStart_Y) + minStart_Y;
             cx_black = random_num * (maxStart_X - minStart_X) + minStart_X;
             map.put(cx_black, cy_black);
-
         }
-        map2=ShuffleIt(map);
+        //map2=ShuffleIt(map);
 
+    }
+
+    public void Hole_producer_2() {
+
+        float minStart_Y = heightPixels / 2;
+        float maxStart_Y = 4 * heightPixels;
+
+        float minStart_X = 0;
+        float maxStart_X = widthPixels;
+
+        radius_ball= (int) (widthPixels*0.02);
+
+        for (int i = 1; i < 50; i++) {
+            cy_black = getRandom((int) minStart_Y, (int) maxStart_Y);
+            cx_black = getRandom((int) minStart_X, (int) maxStart_X);
+            map.put(cx_black, cy_black);
+        }
+
+    }
+
+    Random r = new Random();
+
+    private int getRandom(int low, int high) {
+        int result = r.nextInt(high - low) + low;
+        return result;
     }
 
     private LinkedHashMap<Float, Float> ShuffleIt(HashMap<Float, Float> map) {
@@ -307,6 +358,39 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         for (Object o : keys)     // Access keys/values in a random order
             mapNew.put(o, map.get(o));
         return mapNew;
+    }
+
+    public void dialog(View view, String title, String message) {
+        String str_title = title;
+        String str_Msg = message;
+        AlertDialog alertDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(str_title);
+        builder.setMessage(str_Msg);
+        builder.setCancelable(true);
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Main2Activity.this.finish();
+
+            }
+        });
+
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Main2Activity.this, Main2Activity.class);
+                Main2Activity.this.finish();
+                startActivity(intent);
+
+
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
 
