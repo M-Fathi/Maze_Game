@@ -4,27 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainPage"
-    android:orientation="vertical"
     android:layout_gravity="center"
+    android:background="@drawable/tree2"
     android:gravity="center"
-    android:background="@drawable/tree2">
+    android:orientation="vertical"
+    tools:context=".MainPage">
 
     <Button
         android:id="@+id/btn_play"
+        style="@style/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="playGame"
         android:text="@string/play"
-        android:onClick="playGame"/>
+        android:background="@drawable/button_shape"/>
+
     <Button
         android:id="@+id/btn_score"
+        style="@style/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/score"/>
+        android:text="@string/score"
+        android:background="@drawable/button_shape"/>
+
     <Button
         android:id="@+id/btn_setting"
+        style="@style/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/setting"/>
+        android:text="@string/setting"
+        android:background="@drawable/button_shape"/>
 
 </LinearLayout>

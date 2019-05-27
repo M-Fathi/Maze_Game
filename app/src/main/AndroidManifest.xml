@@ -9,16 +9,23 @@
         android:roundIcon="@drawable/lybrinth2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Main2Activity" android:screenOrientation="portrait">
+        <activity
+            android:name=".Main2Activity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".MainPage"
+            android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".MainPage" android:screenOrientation="portrait">
+        <activity
+            android:name=".Splash"
+            android:label="@string/title_activity_splash"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

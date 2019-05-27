@@ -3,4 +3,5 @@
     <string name="play">Play</string>
     <string name="score">score</string>
     <string name="setting">setting</string>
+    <string name="title_activity_splash">Splash</string>
 </resources>
