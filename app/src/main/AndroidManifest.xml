@@ -9,8 +9,10 @@
         android:roundIcon="@drawable/lybrinth2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Main2Activity" android:screenOrientation="portrait">
 
-        <activity android:name=".Main2Activity">
+        </activity>
+        <activity android:name=".MainPage" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
