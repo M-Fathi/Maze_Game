@@ -236,40 +236,11 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             canvas.drawPaint(pen);
 
 
-            //------------------------------------------------
-
-            //---------------------------------------------------
-            // تولید اتوماتیک و دایمی نقاط مشکی
-
-            /*for (int i = 1; i < 6; i++) {
-                pen.setColor(Color.BLACK);
-                cy_black = cy_rand - cy_black_df;
-                cx_black = i * cx_rand + radius * 3 * i;
-                canvas.drawCircle(cx_black, cy_black, radius, pen);
-                map.put(cx_black, cy_black);
-
-            }*/
-            // map_clone.putAll(map);
-            //------------------------------------------------------
-            // برای زمانیه که مکان دایره های مشکی ثابت بود
-
-            /*for (int i = 1; i < 30; i++) {
-                pen.setColor(Color.BLACK);
-                cy_black = i * heightPixels / 10 + radius * 3 * i - cy_black_df;
-                cx_black = i * widthPixels / 10 + radius * 3 * i;
-                canvas.drawCircle(cx_black, cy_black, radius, pen);
-                map.put(cx_black, cy_black);
-            }*/
             //------------------ Block Point -----------------------------------
             for (Map.Entry<Float, Float> entry : map.entrySet()) {
                 pen.setColor(back_color);
                 new_Cy_black = entry.getValue() - cy_black_df;
                 new_Cx_black = entry.getKey();
-
-                //------------ کد برای کشیدن دایره Hole---------------------
-                //canvas.drawCircle(new_Cx_black, new_Cy_black, radius, pen);
-                //map.remove(entry.getKey());
-                //-----------------------------------------------------------
 
                 int left = (int) (new_Cx_black - radius);
                 int right = (int) (new_Cx_black + radius);
@@ -321,7 +292,6 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             cx_black = random_num * (maxStart_X - minStart_X) + minStart_X;
             map.put(cx_black, cy_black);
         }
-        //map2=ShuffleIt(map);
 
     }
 
