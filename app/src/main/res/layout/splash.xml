@@ -7,6 +7,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/splash1"/>
+        android:background="@drawable/splash2"/>
 
 </LinearLayout>

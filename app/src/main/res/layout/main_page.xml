@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/tree2"
+    android:background="@drawable/tree25"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainPage">
@@ -25,7 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/score"
-        android:background="@drawable/button_shape"/>
+        android:background="@drawable/button_shape"
+        android:onClick="score"/>
 
     <Button
         android:id="@+id/btn_setting"

@@ -39,8 +39,9 @@ import java.util.TimerTask;
 
 public class Main2Activity extends AppCompatActivity implements SensorEventListener {
 
-    private float radius = 30, radius_ball, top, bottom, right, left, score = 0;
+    private float radius = 30, radius_ball, top, bottom, right, left;
     private float sensorX, sensorY, cx, cy, cy_goal, cx_goal, cx_black, cy_black, cy_black_df = 0;
+    int score = 0;
     String str_score = "0000";
     MyView myView;
     long lastSensorUpdateTime;
@@ -50,13 +51,13 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
     Timer timer;
     Handler handler = new Handler();
     List<GameBall> ballList = new ArrayList<>();
-    DBHelper dbHelper;
+    //DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dbHelper = new DBHelper(this);
+        // dbHelper = new DBHelper(this);
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 //------------------- Screen Dimension-----------------------------
@@ -68,9 +69,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
         cy = height / 50;
         cx = width / 2;
-
+/*
         cy_goal = height - (height / 5);
-        cx_goal = width / 2;
+        cx_goal = width / 2;*/
 
         myView = new MyView(this);
         setContentView(myView);
@@ -89,9 +90,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 @Override
                 public void run() {
                     if (sensorY > 0 && cy >= top && cy <= bottom) {
-                        cy += 1;
+                        cy += 0.5;
                     } else if (sensorY < 0 && cy >= top && cy <= bottom) {
-                        cy -= 1;
+                        cy -= 0.5;
                     } else if (cy < top) {
                         cy = top;
                     } else if (cy > bottom) {
@@ -99,9 +100,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                     }
 
                     if (sensorX < 0 && cx >= left && cx <= right) {
-                        cx += 1;
+                        cx += 0.5;
                     } else if (sensorX > 0 && cx >= left && cx <= right) {
-                        cx -= 1;
+                        cx -= 0.5;
                     } else if (cx < left) {
                         cx = left;
                     } else if (cx > right) {
@@ -110,6 +111,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
                     cy_black_df += 0.0025;
                     score += 1;
+
 
                     handler.post(new Runnable() {
                         @Override
@@ -139,6 +141,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             String message = "Do you want to play again?";
             dialog(myView, title, message);
         }
+        //dbInsert();
     }
 
     public void pointInHole(float x_test, float y_test, double radius) {
@@ -228,10 +231,6 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 pen.setColor(back_color);
                 float new_Cy_black = entry.YCoordinate - cy_black_df;
                 float new_Cx_black = entry.XCoordinate;
-                //------------ کد برای کشیدن دایره Hole---------------------
-                //canvas.drawCircle(new_Cx_black, new_Cy_black, radius, pen);
-                //map.remove(entry.getKey());
-                //-----------------------------------------------------------
 
                 int left = (int) (new_Cx_black - radius);
                 int right = (int) (new_Cx_black + radius);
@@ -259,8 +258,22 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             canvas.drawText(str_score, (widthPixels - 100), (float) (35), pen);
 
             //----------------Goal Point----------------------------------
-            pen.setColor(getResources().getColor(R.color.gold));
-            canvas.drawCircle(cx_goal, cy_goal, radius, pen);
+            //pen.setColor(getResources().getColor(R.color.gold));
+            //canvas.drawCircle(cx_goal, cy_goal, radius, pen);
+            cy_goal = cy_goal - cy_black_df;
+            pen.setColor(Color.BLACK);
+            int leftg = (int) (cx_goal - 2 * radius);
+            int rightg = (int) (cx_goal + 2 * radius);
+            int topg = (int) (cy_goal - (1.2 * radius) - cy_black_df);
+            int bottomg = (int) (cy_goal + (1.2 * radius) - cy_black_df);
+            Rect rect_g = new Rect(leftg, topg, rightg, bottomg);
+            canvas.drawRect(rect_g, pen);
+            Drawable drawable = getResources().getDrawable(R.drawable.finish1);
+            drawable.setBounds(rect_g);
+            drawable.draw(canvas);
+            canvas.drawLine(0, bottomg, widthPixels, bottomg, pen);
+
+
             //---------------- Ball --------------------------------------
             pen.setColor(Color.BLUE);
             canvas.drawCircle(cx, cy, radius_ball, pen);
@@ -294,6 +307,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
         float minStart_X = 0;
         float maxStart_X = widthPixels;
+
+        cy_goal = maxStart_Y + heightPixels / 5;
+        cx_goal = width / 2;
 
         radius_ball = (int) (widthPixels * 0.02);
 
@@ -332,13 +348,18 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         alertDialog = builder.create();
         alertDialog.show();
     }
-
-    public void dbInsert() {
-        String scoreNumber = String.valueOf(score);
-
-        Scores scores = new Scores(scoreNumber);
-        dbHelper.insert(scores);
-    }
+//----------------using DataBase ----------------------------------
+//    public void dbInsert() {
+//        int scoreNumber =score;
+//
+//        Scores scores = new Scores(scoreNumber);
+//        dbHelper.insert(scores);
+//    }
+//    public void dbUpdate(){
+//        int scoreNumber =score;
+//        Scores scores = new Scores(scoreNumber,0);
+//        dbHelper.update(scores);
+//    }
 
 
 }
