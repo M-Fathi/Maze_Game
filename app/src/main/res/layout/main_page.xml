@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@drawable/tree25"
+    android:background="@drawable/tree2"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainPage">

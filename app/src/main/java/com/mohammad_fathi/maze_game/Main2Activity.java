@@ -90,7 +90,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 @Override
                 public void run() {
                     if (sensorY > 0 && cy >= top && cy <= bottom) {
-                        cy += 0.5;
+                        cy += (0.5);
                     } else if (sensorY < 0 && cy >= top && cy <= bottom) {
                         cy -= 0.5;
                     } else if (cy < top) {
@@ -133,8 +133,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         double dy = y_test - y_center;
 
         double d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-        if (d < radius) {
+        if (d < radius || cy>cy_goal ) {
             timer.cancel();
+            timer.purge();
             radius_ball = 0;
             myView.invalidate();
             String title = "You Won";
@@ -249,7 +250,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 entry.YCoordinate = new_Cy_black;
             }
             //---------------- Score Board --------------------------------
-            pen.setColor(Color.BLUE);
+            pen.setColor(Color.BLACK);
             pen.setTextSize(30f);
             pen.setTypeface(Typeface.DEFAULT_BOLD);
             str_score = String.valueOf(score);
@@ -261,7 +262,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             //pen.setColor(getResources().getColor(R.color.gold));
             //canvas.drawCircle(cx_goal, cy_goal, radius, pen);
             cy_goal = cy_goal - cy_black_df;
-            pen.setColor(Color.BLACK);
+            pen.setColor(back_color);
             int leftg = (int) (cx_goal - 2 * radius);
             int rightg = (int) (cx_goal + 2 * radius);
             int topg = (int) (cy_goal - (1.2 * radius) - cy_black_df);
@@ -271,6 +272,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             Drawable drawable = getResources().getDrawable(R.drawable.finish1);
             drawable.setBounds(rect_g);
             drawable.draw(canvas);
+            pen.setColor(Color.BLACK);
             canvas.drawLine(0, bottomg, widthPixels, bottomg, pen);
 
 
