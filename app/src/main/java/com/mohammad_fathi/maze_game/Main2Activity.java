@@ -88,9 +88,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 @Override
                 public void run() {
                     if (sensorY > 0 && cy >= top && cy <= bottom) {
-                        cy += (0.5);
+                        cy += (widthPixels/1400);
                     } else if (sensorY < 0 && cy >= top && cy <= bottom) {
-                        cy -= 0.5;
+                        cy -= (widthPixels/1400);
                     } else if (cy < top) {
                         cy = top;
                     } else if (cy > bottom) {
@@ -98,9 +98,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                     }
 
                     if (sensorX < 0 && cx >= left && cx <= right) {
-                        cx += 0.5;
+                        cx += (widthPixels/1400);
                     } else if (sensorX > 0 && cx >= left && cx <= right) {
-                        cx -= 0.5;
+                        cx -= (widthPixels/1400);
                     } else if (cx < left) {
                         cx = left;
                     } else if (cx > right) {
@@ -151,9 +151,10 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             float y_center = entry.YCoordinate;
             double dx = x_test - x_center;
             double dy = y_test - y_center;
+            double radius1=widthPixels/25;
 
             double d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-            if (d < radius) {
+            if (d < radius1) {
                 timer.cancel();
                 timer.purge();
                 myView.invalidate();
@@ -233,10 +234,10 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 float new_Cy_black = entry.YCoordinate - cy_black_df;
                 float new_Cx_black = entry.XCoordinate;
 
-                int left = (int) (new_Cx_black - radius);
-                int right = (int) (new_Cx_black + radius);
-                int top = (int) (new_Cy_black - (1.2 * radius));
-                int bottom = (int) (new_Cy_black + (1.2 * radius));
+                int left = (int) (new_Cx_black - (widthPixels*0.05));
+                int right = (int) (new_Cx_black + (widthPixels*0.05));
+                int top = (int) (new_Cy_black - (1.2 * (widthPixels*0.05)));
+                int bottom = (int) (new_Cy_black + (1.2 * (widthPixels*0.05)));
                 Rect rect = new Rect(left, top, right, bottom);
                 canvas.drawRect(rect, pen);
                 Drawable drawable = getResources().getDrawable(R.drawable.t4);
@@ -248,21 +249,22 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             }
             //---------------- Score Board --------------------------------
             pen.setColor(Color.BLACK);
-            pen.setTextSize(30f);
+            float textsize= (float) (widthPixels*0.04);
+            pen.setTextSize(textsize);
             pen.setTypeface(Typeface.DEFAULT_BOLD);
             str_score = String.valueOf(score);
             String str_sc = "Score : ";
-            canvas.drawText(str_sc, (widthPixels - 200), (float) (35), pen);
-            canvas.drawText(str_score, (widthPixels - 100), (float) (35), pen);
+            canvas.drawText(str_sc, (float) (widthPixels - widthPixels/3.5), (float) (widthPixels/20), pen);
+            canvas.drawText(str_score, (float) (widthPixels - widthPixels/7), (float) (widthPixels/20), pen);
 
             //----------------Goal Point----------------------------------
 
             cy_goal = cy_goal - cy_black_df;
             pen.setColor(back_color);
-            int leftg = (int) (cx_goal - 2 * radius);
-            int rightg = (int) (cx_goal + 2 * radius);
-            int topg = (int) (cy_goal - (1.2 * radius) - cy_black_df);
-            int bottomg = (int) (cy_goal + (1.2 * radius) - cy_black_df);
+            int leftg = (int) (cx_goal - 2 * (widthPixels*0.04));
+            int rightg = (int) (cx_goal + 2 * (widthPixels*0.04));
+            int topg = (int) (cy_goal - (1.2 * (widthPixels*0.04)) - cy_black_df);
+            int bottomg = (int) (cy_goal + (1.2 * (widthPixels*0.04)) - cy_black_df);
             Rect rect_g = new Rect(leftg, topg, rightg, bottomg);
             canvas.drawRect(rect_g, pen);
             Drawable drawable = getResources().getDrawable(R.drawable.finish1);
