@@ -41,7 +41,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
     private float radius = 30, radius_ball, top, bottom, right, left;
     private float sensorX, sensorY, cx, cy, cy_goal, cx_goal, cx_black, cy_black, cy_black_df = 0;
-    int score = 0;
+    int score = 0, color_ball=Color.BLUE;
     String str_score = "0000";
     MyView myView;
     long lastSensorUpdateTime;
@@ -51,13 +51,12 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
     Timer timer;
     Handler handler = new Handler();
     List<GameBall> ballList = new ArrayList<>();
-    //DBHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // dbHelper = new DBHelper(this);
         sensorManager = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 //------------------- Screen Dimension-----------------------------
@@ -66,12 +65,11 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         height = displayMetrics.heightPixels;
         width = displayMetrics.widthPixels;
 //-----------------------------------------------------------------
+        Intent intent = getIntent();
+        if(intent!=null){color_ball = intent.getIntExtra("ball_color", Color.BLUE);}
 
         cy = height / 50;
         cx = width / 2;
-/*
-        cy_goal = height - (height / 5);
-        cx_goal = width / 2;*/
 
         myView = new MyView(this);
         setContentView(myView);
@@ -133,7 +131,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         double dy = y_test - y_center;
 
         double d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-        if (d < radius || cy>cy_goal ) {
+        if (d < radius || cy > cy_goal) {
             timer.cancel();
             timer.purge();
             radius_ball = 0;
@@ -142,7 +140,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             String message = "Do you want to play again?";
             dialog(myView, title, message);
         }
-        //dbInsert();
+        //-----------------------Database-------------------------------
+        dbInsert();
+        //--------------------------------------------------------------
     }
 
     public void pointInHole(float x_test, float y_test, double radius) {
@@ -243,9 +243,6 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 drawable.setBounds(rect);
                 drawable.draw(canvas);
 
-                //note:all references  will update original object for classes and reference types
-                //there is no need to re add it to collection and push it to hash again
-                //decimal and base types are Value types and each reference have separate copy
                 entry.XCoordinate = new_Cx_black;
                 entry.YCoordinate = new_Cy_black;
             }
@@ -259,8 +256,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             canvas.drawText(str_score, (widthPixels - 100), (float) (35), pen);
 
             //----------------Goal Point----------------------------------
-            //pen.setColor(getResources().getColor(R.color.gold));
-            //canvas.drawCircle(cx_goal, cy_goal, radius, pen);
+
             cy_goal = cy_goal - cy_black_df;
             pen.setColor(back_color);
             int leftg = (int) (cx_goal - 2 * radius);
@@ -277,7 +273,8 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
 
             //---------------- Ball --------------------------------------
-            pen.setColor(Color.BLUE);
+            if(color_ball==0){color_ball=Color.BLUE;}
+            pen.setColor(color_ball);
             canvas.drawCircle(cx, cy, radius_ball, pen);
         }
     }
@@ -350,18 +347,27 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         alertDialog = builder.create();
         alertDialog.show();
     }
-//----------------using DataBase ----------------------------------
-//    public void dbInsert() {
+
+
+//-------------------  using DataBase ----------------------------------
+
+    public void dbInsert() {
 //        int scoreNumber =score;
-//
+//        DBHelper dbHelper = new DBHelper(this);
 //        Scores scores = new Scores(scoreNumber);
 //        dbHelper.insert(scores);
-//    }
-//    public void dbUpdate(){
+    }
+
+    public void dbUpdate(){
 //        int scoreNumber =score;
+//        DBHelper dbHelper = new DBHelper(this);
 //        Scores scores = new Scores(scoreNumber,0);
 //        dbHelper.update(scores);
-//    }
+    }
+// --------------------------------------------------------------------------
 
-
+    @Override
+    public void onBackPressed() {
+        this.finish();
+    }
 }

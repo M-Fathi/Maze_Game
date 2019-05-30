@@ -5,7 +5,9 @@
     <color name="colorAccent">#D81B60</color>
     <color name="blue">#3247cf</color>
     <color name="gold">#ffb302</color>
-    <color name="kerem">#e2e2e0</color>
+    <color name="kerem">#9e9b96</color>
     <color name="gray">#d5d6d6</color>
+    <color name="black">#000000</color>
+    <color name="green">#24f708</color>
 
 </resources>

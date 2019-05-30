@@ -10,11 +10,11 @@ import android.support.annotation.Nullable;
 import com.mohammad_fathi.maze_game.entity.Scores;
 
 public class DBHelper extends SQLiteOpenHelper {
-    static String databseName = "ScoreTable";
+    static String databaseName = "ScoreTable";
     static int version = 1;
 
     public DBHelper(Context context) {
-        super(context, databseName, null, version);
+        super(context, databaseName, null, version);
     }
 
     @Override
