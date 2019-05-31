@@ -39,14 +39,15 @@ public class DBHelper extends SQLiteOpenHelper {
         return rowId;
     }
 
-    public Integer selectBiggest() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(Scores.class.getSimpleName(), new String[]{"scoreNumber"}, "scoreNumber = SELECT MAX(scoreNumber)", null, null, null, null);
-        int result = cursor.getInt(0);
-        cursor.close();
-        db.close();
-        return result;
-    }
+//    public Integer selectBiggest() {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor cursor = db.query(Scores.class.getSimpleName(), new String[]{"scoreNumber"}, "scoreNumber = SELECT MAX(scoreNumber)", null, null, null, null);
+//        int result = cursor.getInt(0);
+//        cursor.close();
+//        db.close();
+//        return result;
+//    }
+
     public void update(Scores scores) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

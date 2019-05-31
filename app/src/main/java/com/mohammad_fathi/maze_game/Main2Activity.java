@@ -20,6 +20,7 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Toast;
@@ -51,7 +52,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
     Timer timer;
     Handler handler = new Handler();
     List<GameBall> ballList = new ArrayList<>();
-
+   // Helpers helpers=new Helpers();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,10 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         left = radius;
 
         Hole_producer_2();
+
+        //helpers.playSound(this);
+
+
 
         try {
 
@@ -140,9 +145,6 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             String message = "Do you want to play again?";
             dialog(myView, title, message);
         }
-        //-----------------------Database-------------------------------
-        dbInsert();
-        //--------------------------------------------------------------
     }
 
     public void pointInHole(float x_test, float y_test, double radius) {
@@ -348,23 +350,24 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
         alertDialog = builder.create();
         alertDialog.show();
+        dbInsert();
     }
 
 
 //-------------------  using DataBase ----------------------------------
 
     public void dbInsert() {
-//        int scoreNumber =score;
-//        DBHelper dbHelper = new DBHelper(this);
-//        Scores scores = new Scores(scoreNumber);
-//        dbHelper.insert(scores);
+        int scoreNumber =score;
+        DBHelper dbHelper = new DBHelper(this);
+        Scores scores = new Scores(scoreNumber);
+        dbHelper.insert(scores);
     }
 
     public void dbUpdate(){
-//        int scoreNumber =score;
-//        DBHelper dbHelper = new DBHelper(this);
-//        Scores scores = new Scores(scoreNumber,0);
-//        dbHelper.update(scores);
+        int scoreNumber =score;
+        DBHelper dbHelper = new DBHelper(this);
+        Scores scores = new Scores(scoreNumber,0);
+        dbHelper.update(scores);
     }
 // --------------------------------------------------------------------------
 

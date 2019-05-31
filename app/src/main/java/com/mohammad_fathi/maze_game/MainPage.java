@@ -37,10 +37,10 @@ public class MainPage extends AppCompatActivity {
 
 //---------------- Database -----------------
         String message = "0000";
-//        Integer maxScore = dbHelper.selectBiggest();
-//        if (maxScore != null) {
-//            message = String.valueOf(maxScore);
-//        }
+        Integer maxScore = dbHelper.selectBiggest();
+        if (maxScore != null) {
+            message = String.valueOf(maxScore);
+        }
 
         String title = "The Best Score";
         dialog(view, title, message);
