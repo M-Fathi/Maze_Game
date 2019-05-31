@@ -53,7 +53,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
     Handler handler = new Handler();
     List<GameBall> ballList = new ArrayList<>();
    // Helpers helpers=new Helpers();
-
+   DBHelper dbHelper = new DBHelper(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -350,25 +350,10 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
         alertDialog = builder.create();
         alertDialog.show();
-        dbInsert();
+        dbHelper.SaveScore(score);
     }
 
 
-//-------------------  using DataBase ----------------------------------
-
-    public void dbInsert() {
-        int scoreNumber =score;
-        DBHelper dbHelper = new DBHelper(this);
-        Scores scores = new Scores(scoreNumber);
-        dbHelper.insert(scores);
-    }
-
-    public void dbUpdate(){
-        int scoreNumber =score;
-        DBHelper dbHelper = new DBHelper(this);
-        Scores scores = new Scores(scoreNumber,0);
-        dbHelper.update(scores);
-    }
 // --------------------------------------------------------------------------
 
     @Override
