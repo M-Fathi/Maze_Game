@@ -46,6 +46,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
     List<GameBall> ballList = new ArrayList<>();
     MediaPlayer mp;
     MediaPlayer mp2;
+
     // Helpers helpers=new Helpers();
    DBHelper dbHelper = new DBHelper(this);
     @Override
@@ -76,10 +77,23 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
         Hole_producer_2();
 
+
+
         //Helpers.playSound(this, R.raw.symphony9);
-        mp = MediaPlayer.create(this, R.raw.symphony9);
-        mp2 = MediaPlayer.create(this, R.raw.avalanchehit);
-        mp.stop();
+        if(mp==null)
+          mp=MediaPlayer.create(this, R.raw.symphony9);
+        else
+            mp.reset();
+
+         if(mp2==null){
+             //SoundPool soundPool=new SoundPool(5, AudioManager.,0);
+             mp2=MediaPlayer.create(this, R.raw.ski1);
+         }
+         else
+            mp2.reset();
+
+
+        mp.isLooping();
         mp.start();
 
 
@@ -191,11 +205,13 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
             long currentTime = System.currentTimeMillis();
-            if ((currentTime - lastSensorUpdateTime) > 400) {
+            if ((currentTime - lastSensorUpdateTime) > 300) {
+
                 lastSensorUpdateTime = currentTime;
                 sensorX = sensorEvent.values[0];
                 sensorY = sensorEvent.values[1];
                 //sensorZ =  sensorEvent.values[2];
+                //mp2.reset();
                 //mp2.start();
                 myView.invalidate();
             }
