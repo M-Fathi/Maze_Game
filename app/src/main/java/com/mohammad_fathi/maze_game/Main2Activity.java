@@ -1,7 +1,6 @@
 package com.mohammad_fathi.maze_game;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -17,24 +16,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Toast;
 
 import com.mohammad_fathi.maze_game.database.DBHelper;
-import com.mohammad_fathi.maze_game.entity.Scores;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -82,7 +73,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
         Hole_producer_2();
 
-        //helpers.playSound(this);
+        Helpers.playSound(this);
 
 
 

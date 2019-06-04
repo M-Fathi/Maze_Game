@@ -1,19 +1,10 @@
 package com.mohammad_fathi.maze_game;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.AudioManager;
-import android.media.SoundPool;
-import android.view.View;
+import android.media.MediaPlayer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Random;
+
 
 public class Helpers {
 
@@ -34,12 +25,18 @@ public class Helpers {
         return r.nextInt(high - low) + low;
     }
 
-    public void playSound(Context context){
-        SoundPool soundPool=new SoundPool(5,AudioManager.STREAM_MUSIC,0);
-        int soundId = soundPool.load(context, R.raw.symphony9, 1);
-        soundPool.play(soundId, 1, 1, 0, 0, 1);
-        soundPool.release();
-        soundPool = null;
+    public static void playSound(Context context){
+
+
+        MediaPlayer mp = MediaPlayer.create(context, R.raw.symphony9);
+        mp.start();
+        //mp.setLooping(true);
+        //mp.oncom
+//        SoundPool soundPool=new SoundPool(5,AudioManager.STREAM_MUSIC,0);
+//        int soundId = soundPool.load(context, R.raw.symphony9, 1);
+//        soundPool.play(soundId, 1, 1, 0, 0, 1);
+//        soundPool.release();
+//        soundPool = null;
 
     }
 
