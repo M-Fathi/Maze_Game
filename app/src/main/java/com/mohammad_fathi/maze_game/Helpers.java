@@ -25,10 +25,10 @@ public class Helpers {
         return r.nextInt(high - low) + low;
     }
 
-    public static void playSound(Context context){
+    public static void playSound(Context context,int resid){
 
 
-        MediaPlayer mp = MediaPlayer.create(context, R.raw.symphony9);
+        MediaPlayer mp = MediaPlayer.create(context, resid);
         mp.start();
         //mp.setLooping(true);
         //mp.oncom

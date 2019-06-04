@@ -16,6 +16,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +44,9 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
     Timer timer;
     Handler handler = new Handler();
     List<GameBall> ballList = new ArrayList<>();
-   // Helpers helpers=new Helpers();
+    MediaPlayer mp;
+    MediaPlayer mp2;
+    // Helpers helpers=new Helpers();
    DBHelper dbHelper = new DBHelper(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +76,11 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
 
         Hole_producer_2();
 
-        Helpers.playSound(this);
-
+        //Helpers.playSound(this, R.raw.symphony9);
+        mp = MediaPlayer.create(this, R.raw.symphony9);
+        mp2 = MediaPlayer.create(this, R.raw.avalanchehit);
+        mp.stop();
+        mp.start();
 
 
         try {
@@ -122,6 +128,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         }
     }
 
+
     public void pointInGoal(float x_test, float y_test, float x_center, float y_center, double radius) {
         double dx = x_test - x_center;
         double dy = y_test - y_center;
@@ -133,6 +140,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
             radius_ball = 0;
             myView.invalidate();
             String title = "You Won";
+            mp.stop();
             String message = "Do you want to play again?";
             dialog(myView, title, message);
         }
@@ -155,6 +163,7 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
                 cx = width / 2;
                 myView.invalidate();
                 timer.cancel();
+                mp.stop();
                 String title = "Game Over";
                 String message = "Do you want to play again?";
                 dialog(myView, title, message);
@@ -182,13 +191,13 @@ public class Main2Activity extends AppCompatActivity implements SensorEventListe
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
             long currentTime = System.currentTimeMillis();
-            if ((currentTime - lastSensorUpdateTime) > 100) {
+            if ((currentTime - lastSensorUpdateTime) > 400) {
                 lastSensorUpdateTime = currentTime;
                 sensorX = sensorEvent.values[0];
                 sensorY = sensorEvent.values[1];
                 //sensorZ =  sensorEvent.values[2];
+                //mp2.start();
                 myView.invalidate();
-
             }
         }
     }
